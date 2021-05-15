@@ -10,7 +10,7 @@ const index = () => {
     <NavbarContainer>
       <img src="./img/Logo.svg" alt="" />
       <NavbarButtonContainer>
-        <ButtonNavbar>Encrypted</ButtonNavbar>
+        <ButtonNavbar active={true}>Encrypted</ButtonNavbar>
         <ButtonNavbar>fdsfsdff</ButtonNavbar>
       </NavbarButtonContainer>
     </NavbarContainer>
