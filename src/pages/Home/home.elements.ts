@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { Row } from "../../styles/grid";
+import { BorderedCenteredDiv } from "../../styles/uiKit";
 
 export const HomeContainer = styled.div`
   background-color: ${(props) => props.theme.primaryColor};
@@ -51,11 +52,14 @@ export const ButtonWrapper = styled(Row)`
   }
 `;
 
-export const DroppedFileDiv = styled.div`
-  display: flex;
+export const DroppedFileDiv = styled(BorderedCenteredDiv)`
   flex-direction: column;
   align-items: center;
-  padding-top: 50px;
+  padding: 30px 0;
+  width: 50%;
+  min-width: 500px;
+  border-radius: 3px;
+  margin-bottom: 40px;
   svg {
     font-size: 40px;
     margin-bottom: 20px;

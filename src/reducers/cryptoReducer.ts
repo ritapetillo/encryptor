@@ -1,4 +1,9 @@
-import { CRYPT_ERROR, CRYPT_LOADING, CRYPT_SUCCESS } from "../actions/types";
+import {
+  CRYPT_ERROR,
+  CRYPT_LOADING,
+  CRYPT_RESET,
+  CRYPT_SUCCESS,
+} from "../actions/types";
 import { CryptAction, CryptDispachTypes } from "../interfaces/actions";
 import { ThemeState, Theme, CryptoState } from "../interfaces/states";
 
@@ -33,6 +38,16 @@ const cryptoReducer = (state = initialState, action: CryptDispachTypes) => {
         ...state,
         loading: false,
         error: payload.error,
+      };
+    case CRYPT_RESET:
+      return {
+        ...state,
+        fileName: "",
+        fileURL: "",
+        loading: false,
+        type: "",
+        key: "",
+        error: "",
       };
     default:
       return state;

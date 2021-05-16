@@ -1,6 +1,7 @@
 import {
   CRYPT_ERROR,
   CRYPT_LOADING,
+  CRYPT_RESET,
   CRYPT_SUCCESS,
   SWITCH_THEME,
 } from "../../actions/types";
@@ -33,6 +34,14 @@ export interface CryptError {
   type: typeof CRYPT_ERROR;
   payload: cryptPayload;
 }
+export interface CryptReset {
+  type: typeof CRYPT_RESET;
+  payload: cryptPayload;
+}
 
 export type ThemeDispachTypes = SwitchTheme;
-export type CryptDispachTypes = CryptAction | CryptLoading | CryptError;
+export type CryptDispachTypes =
+  | CryptAction
+  | CryptLoading
+  | CryptError
+  | CryptReset;

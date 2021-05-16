@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { IButtonNavbar } from "../components/Navbar/navbar.elements";
+import { Row } from "./grid";
 
 interface IButton {
   encrypt?: boolean;
@@ -42,4 +43,29 @@ export const ButtonInput = styled.div`
       border-right: 1px solid #98a0a6;
     }
   }
+`;
+
+export const InputDiv = styled.div`
+  background-color: ${(props) => props.theme.primaryColorLighter};
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: ${(props) => props.theme.text};
+  border-radius: 3px;
+  min-width: 500px;
+
+  border: 1px solid ${(props) => props.theme.primaryColorLighter};
+  span {
+    display: block;
+    padding: 0 20px;
+    margin-right: 30px;
+  }
+`;
+
+export const BorderedCenteredDiv = styled(Row)`
+  border: 0.1px solid ${(props) => props.theme.primaryColorLighter};
+  justify-content: center;
+  align-items: center;
+  height: 120px;
 `;
