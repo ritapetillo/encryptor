@@ -50,3 +50,14 @@ export const ButtonWrapper = styled(Row)`
     margin: 30px 10px;
   }
 `;
+
+export const DroppedFileDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 50px;
+  svg {
+    font-size: 40px;
+    margin-bottom: 20px;
+  }
+`;
