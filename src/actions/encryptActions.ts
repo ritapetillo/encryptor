@@ -5,24 +5,21 @@ import CryptoJS from "crypto-js";
 import { CRYPT_ERROR, CRYPT_LOADING, CRYPT_SUCCESS } from "./types";
 
 export const cryptAction =
-  (file: File | undefined, type: string) =>
+  (file: File | undefined, data: string, type: string) =>
   async (dispatch: Dispatch<CryptDispachTypes>) => {
     dispatch({
       type: CRYPT_LOADING,
       payload: {},
     });
+    const cryptWorker = new Worker("./cryptoWorker.js");
     try {
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        if (!file) return null;
-        const data: string | ArrayBuffer | null = reader.result;
-        if (!data || typeof data !== "string") return null;
-        if (type === "enc") {
-          const randomKey = await crypto.randomKey(32);
-          const key = btoa(randomKey);
-          const encrypted = CryptoJS.AES.encrypt(data, key);
-          const fileURL = "data:application/octet-stream," + encrypted;
-          const fileName = `${file.name}.enc`;
+      if (type === "enc") {
+        const randomKey = await crypto.randomKey(32);
+        const key = btoa(randomKey);
+        cryptWorker.postMessage({ data, key, type });
+        cryptWorker.onmessage = (e) => {
+          const fileURL = e.data;
+          const fileName = `${file!.name}.enc`;
           dispatch({
             type: CRYPT_SUCCESS,
             payload: {
@@ -32,9 +29,11 @@ export const cryptAction =
               type,
             },
           });
-        }
-        reader.readAsDataURL(file);
-      };
+        };
+        cryptWorker.onerror = (e) => {
+          throw Error;
+        };
+      }
     } catch (err) {
       dispatch({
         type: CRYPT_ERROR,

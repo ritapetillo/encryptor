@@ -12,14 +12,32 @@ import { Button, ButtonInput } from "../../styles/uiKit";
 import { Row } from "../../styles/grid";
 import { BsChevronDown } from "react-icons/bs";
 import { FaFile } from "react-icons/fa";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { cryptAction } from "../../actions/encryptActions";
+import { RootStore } from "../../store";
 const Home = () => {
   const [file, setFile] = useState<File | undefined>();
+  const [data, setData] = useState<string | ArrayBuffer | null>();
+  const dispatch = useDispatch();
+  const { fileURL, fileName, key } = useSelector(
+    (state: RootStore) => state.crypto
+  );
+
   const onDrop = useCallback((file: File[]) => {
     setFile(file[0]);
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      console.log(reader.result);
+      setData(reader.result);
+    };
+    reader.readAsDataURL(file[0]);
   }, []);
-  const dispatch = useDispatch();
+
+  const handleCrypt = (type: string) => {
+    if (file && data && typeof data === "string") {
+      dispatch(cryptAction(file, data, type));
+    }
+  };
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
   const uploadArea = useMemo(
@@ -61,11 +79,20 @@ const Home = () => {
         </DropZoneDiv>
       </DropZoneWrapper>
       <ButtonWrapper>
-        <Button encrypt onClick={() => dispatch(cryptAction(file, "enc"))}>
+        <Button encrypt onClick={() => handleCrypt("enc")}>
           Encrypt
         </Button>
         <Button>Decrypt</Button>
       </ButtonWrapper>
+      <DroppedFileDiv>
+        <FaFile style={{ marginRight: "10px" }} />
+        {fileName}
+      </DroppedFileDiv>
+      <p>Your encryption key:</p>
+      <div>{key}</div>
+      <a href={fileURL} download={fileName}>
+        <Button>Download</Button>
+      </a>
     </HomeContainer>
   );
 };
