@@ -11,6 +11,9 @@ export const HomeContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  a {
+    text-decoration: none;
+  }
 `;
 
 export const TextWrapper = styled.div`
@@ -27,6 +30,9 @@ export const TextWrapper = styled.div`
     word-break: break-all;
     line-height: 26px;
   }
+  @media (max-width: 450px) {
+    padding-top: 100px;
+  }
 `;
 
 export const DropZoneWrapper = styled.div`
@@ -35,20 +41,17 @@ export const DropZoneWrapper = styled.div`
   color: ${(props) => props.theme.primaryColor};
 `;
 
-export const DropZoneDiv = styled.div`
-  background-color: rgba(22, 22, 22, 0.16);
-  border: 1px dashed #363636;
-  max-width: 936px;
-  width: 70vw;
-  height: 200px;
-  display: grid;
-  object-position: center;
-`;
-
 export const ButtonWrapper = styled(Row)`
   justify-content: center;
+  @media (max-width: 380px) {
+    flex-direction: column;
+    align-content: center;
+  }
   div {
-    margin: 30px 10px;
+    margin: 0px 10px;
+    @media (max-width: 380px) {
+      margin: 15px 0px;
+    }
   }
 `;
 
@@ -57,7 +60,6 @@ export const DroppedFileDiv = styled(BorderedCenteredDiv)`
   align-items: center;
   padding: 30px 0;
   width: 50%;
-  min-width: 500px;
   border-radius: 3px;
   margin-bottom: 40px;
   svg {

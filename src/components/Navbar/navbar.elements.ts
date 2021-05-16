@@ -14,6 +14,7 @@ export const NavbarContainer = styled.div`
   @media (max-width: 450px) {
     flex-direction: column;
     align-items: flex-start;
+    height: 60px;
 
     img {
       margin: 10px 0;
@@ -23,6 +24,11 @@ export const NavbarContainer = styled.div`
 
 export const NavbarButtonContainer = styled.div`
   display: flex;
+  @media (max-width: 450px) {
+    width: 100%;
+    margin: 40px 0;
+    justify-content: center;
+  }
 `;
 export interface IButtonNavbar {
   active?: boolean;

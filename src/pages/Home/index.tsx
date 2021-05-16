@@ -11,10 +11,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootStore } from "../../store";
 import DropZone from "../../components/DropZone";
 import { CRYPT_RESET } from "../../actions/types";
+import GridLoader from "react-spinners/GridLoader";
 
 const Home = () => {
   const dispatch = useDispatch();
-  const { fileURL, fileName, key, error, type } = useSelector(
+  const { fileURL, fileName, key, error, type, loading } = useSelector(
     (state: RootStore) => state.crypto
   );
   const handleReset = () => {
@@ -27,41 +28,51 @@ const Home = () => {
     <HomeContainer>
       <TextWrapper>
         <h2>fdsfjsdpofjdpspsjg</h2>
-        <p>
-          fdsfdsfdsfdsgfdsfdsfdsfdshjfgjghjtyighhrfth4564565dfedfbhvkdfbgskdfbgkdfghdfklhew4ulo;i;o';fgkk;dfllgkdf;heroh
-        </p>
+        {!fileURL && (
+          <p>
+            fdsfdsfdsfdsgfdsfdsfdsfdshjfgjghjtyighhrfth4564565dfedfbhvkdfbgskdfbgkdfghdfklhew4ulo;i;o';fgkk;dfllgkdf;heroh
+          </p>
+        )}
       </TextWrapper>
-      {fileURL ? (
-        <>
-          <DroppedFileDiv>
-            <FaFile style={{ marginRight: "10px" }} />
-            {fileName}
-          </DroppedFileDiv>
-          {type === "enc" && (
-            <>
-              {" "}
-              <p>Your encryption key:</p>
-              <InputDiv>
-                <span>{key}</span>
-                <Button
-                  onClick={() => {
-                    if (key) navigator.clipboard.writeText(key);
-                  }}
-                >
-                  Copy
-                </Button>
-              </InputDiv>
-            </>
-          )}
-          <ButtonWrapper>
-            <a href={fileURL} download={fileName}>
-              <Button style={{ backgroundColor: "orange" }}>Download</Button>{" "}
-            </a>
-            <Button onClick={handleReset}>Done</Button>
-          </ButtonWrapper>
-        </>
+      {loading ? (
+        <GridLoader loading={true} color={"orange"} size={30} />
       ) : (
-        <DropZone />
+        <>
+          {fileURL ? (
+            <>
+              <DroppedFileDiv>
+                <FaFile style={{ marginRight: "10px" }} />
+                {fileName}
+              </DroppedFileDiv>
+              {type === "enc" && (
+                <>
+                  {" "}
+                  <p>Your encryption key:</p>
+                  <InputDiv>
+                    <span>{key}</span>
+                    <Button
+                      onClick={() => {
+                        if (key) navigator.clipboard.writeText(key);
+                      }}
+                    >
+                      Copy
+                    </Button>
+                  </InputDiv>
+                </>
+              )}
+              <ButtonWrapper>
+                <a href={fileURL} download={fileName}>
+                  <Button style={{ backgroundColor: "orange" }}>
+                    Download
+                  </Button>{" "}
+                </a>
+                <Button onClick={handleReset}>Done</Button>
+              </ButtonWrapper>
+            </>
+          ) : (
+            <DropZone />
+          )}
+        </>
       )}
     </HomeContainer>
   );

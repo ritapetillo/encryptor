@@ -15,45 +15,57 @@ import { cryptAction } from "../../actions/encryptActions";
 import { RootStore } from "../../store";
 import { CRYPT_ERROR, CRYPT_RESET } from "../../actions/types";
 import { RiDeleteBin2Fill } from "react-icons/ri";
+import { css } from "@emotion/core";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const DropZone = () => {
   const [file, setFile] = useState<File | undefined>();
   const [pass, setPass] = useState<string | undefined>();
   const [decrypt, setDecrypt] = useState(false);
+  const [fileLoading, setFileLoading] = useState(false);
   const dispatch = useDispatch();
   const { fileURL, fileName, key, error } = useSelector(
     (state: RootStore) => state.crypto
   );
 
   const onDrop = useCallback((file: File[]) => {
-    if (file[0]) setFile(file[0]);
+    setFileLoading(true);
+    setTimeout(() => {
+      if (file[0]) {
+        setFile(file[0]);
+        setFileLoading(false);
+      }
+    }, 1000);
   }, []);
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   const handleCrypt = async (type: string) => {
-    const reader = new FileReader();
-    if (type === "dec") {
-      if (pass) {
+    if (type === "enc") setDecrypt(false);
+    if (file) {
+      const reader = new FileReader();
+      if (type === "dec") {
+        if (pass) {
+          reader.onload = async (fileRead) => {
+            console.log(fileRead);
+            if (!file) return null;
+            dispatch(cryptAction(file, reader.result, type, pass));
+          };
+          reader.readAsText(file!);
+        } else
+          dispatch({
+            type: CRYPT_ERROR,
+            payload: {
+              error: "You must insert the key",
+            },
+          });
+      } else {
         reader.onload = async (fileRead) => {
           console.log(fileRead);
           if (!file) return null;
           dispatch(cryptAction(file, reader.result, type, pass));
         };
-        reader.readAsText(file!);
-      } else
-        dispatch({
-          type: CRYPT_ERROR,
-          payload: {
-            error: "You must insert the key",
-          },
-        });
-    } else {
-      reader.onload = async (fileRead) => {
-        console.log(fileRead);
-        if (!file) return null;
-        dispatch(cryptAction(file, reader.result, type, pass));
-      };
-      reader.readAsDataURL(file!);
+        reader.readAsDataURL(file!);
+      }
     }
   };
 
@@ -98,6 +110,7 @@ const DropZone = () => {
         <DropZoneDiv {...getRootProps({ refKey: "innerRef" })}>
           {uploadArea}
         </DropZoneDiv>
+        <ClipLoader loading={fileLoading} />
       </DropZoneWrapper>
       {decrypt && (
         <KeyInputDiv>

@@ -6,6 +6,7 @@ export const DropZoneWrapper = styled.div`
   background-color: #ffa047;
   padding: 10px;
   color: ${(props) => props.theme.primaryColor};
+  margin-bottom: 20px;
 `;
 
 export const DropZoneDiv = styled.div`
@@ -16,12 +17,22 @@ export const DropZoneDiv = styled.div`
   height: 200px;
   display: grid;
   object-position: center;
+  @media (max-width: 450px) {
+    width: 92vw;
+  }
 `;
 
 export const ButtonWrapper = styled(Row)`
   justify-content: center;
+  @media (max-width: 380px) {
+    flex-direction: column;
+    align-content: center;
+  }
   div {
     margin: 30px 10px;
+    @media (max-width: 380px) {
+      margin: 15px 0px;
+    }
   }
 `;
 

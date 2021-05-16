@@ -16,50 +16,50 @@ export const cryptAction =
       type: CRYPT_LOADING,
       payload: {},
     });
+
     const cryptWorker = new Worker("./cryptoWorker.js");
     try {
-      console.log(type);
-      console.log(data);
+      setTimeout(async () => {
+        if (typeof data !== "string") return null;
+        if (type === "enc") {
+          const randomKey = await crypto.randomKey(32);
 
-      if (typeof data !== "string") return null;
-      if (type === "enc") {
-        const randomKey = await crypto.randomKey(32);
-
-        const key = btoa(randomKey);
-        cryptWorker.postMessage({ data, key: randomKey, type });
-        cryptWorker.onmessage = (e) => {
-          const fileURL = e.data;
-          const fileName = `${file!.name}.enc`;
-          dispatch({
-            type: CRYPT_SUCCESS,
-            payload: {
-              fileURL,
-              fileName,
-              key,
-              type,
-            },
-          });
+          const key = btoa(randomKey);
+          cryptWorker.postMessage({ data, key: randomKey, type });
+          cryptWorker.onmessage = (e) => {
+            const fileURL = e.data;
+            const fileName = `${file!.name}.enc`;
+            dispatch({
+              type: CRYPT_SUCCESS,
+              payload: {
+                fileURL,
+                fileName,
+                key,
+                type,
+              },
+            });
+          };
+        } else {
+          const key = atob(pass);
+          cryptWorker.postMessage({ data, key, type });
+          cryptWorker.onmessage = (e) => {
+            const fileURL = e.data;
+            const fileName = `${file!.name.replace(".enc", "")}`;
+            dispatch({
+              type: CRYPT_SUCCESS,
+              payload: {
+                fileURL,
+                fileName,
+                key: "",
+                type,
+              },
+            });
+          };
+        }
+        cryptWorker.onerror = (e) => {
+          throw Error;
         };
-      } else {
-        const key = atob(pass);
-        cryptWorker.postMessage({ data, key, type });
-        cryptWorker.onmessage = (e) => {
-          const fileURL = e.data;
-          const fileName = `${file!.name.replace(".enc", "")}`;
-          dispatch({
-            type: CRYPT_SUCCESS,
-            payload: {
-              fileURL,
-              fileName,
-              key: "",
-              type,
-            },
-          });
-        };
-      }
-      cryptWorker.onerror = (e) => {
-        throw Error;
-      };
+      }, 3000);
     } catch (err) {
       dispatch({
         type: CRYPT_ERROR,

@@ -53,13 +53,25 @@ export const InputDiv = styled.div`
   align-items: center;
   color: ${(props) => props.theme.text};
   border-radius: 3px;
-  min-width: 500px;
-
+  margin-bottom: 30px;
   border: 1px solid ${(props) => props.theme.primaryColorLighter};
   span {
     display: block;
     padding: 0 20px;
-    margin-right: 30px;
+    word-wrap: break-word;
+    white-space: normal;
+  }
+  div {
+    width: fit-content;
+    padding: 10px 20px;
+  }
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-content: center;
+    span {
+      width: 80vw;
+      margin-bottom: 20px;
+    }
   }
 `;
 
