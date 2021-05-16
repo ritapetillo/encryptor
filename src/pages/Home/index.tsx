@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import {
   ButtonWrapper,
   DropZoneDiv,
@@ -18,6 +18,8 @@ import { RootStore } from "../../store";
 const Home = () => {
   const [file, setFile] = useState<File | undefined>();
   const [data, setData] = useState<string | ArrayBuffer | null>();
+  const [pass, setPass] = useState<string | undefined>();
+  const [decrypt, setDecrypt] = useState(false);
   const dispatch = useDispatch();
   const { fileURL, fileName, key } = useSelector(
     (state: RootStore) => state.crypto
@@ -30,12 +32,22 @@ const Home = () => {
       console.log(reader.result);
       setData(reader.result);
     };
-    reader.readAsDataURL(file[0]);
+    reader.readAsText(file[0]);
   }, []);
 
   const handleCrypt = (type: string) => {
+    setDecrypt(true);
+    console.log(pass);
+
     if (file && data && typeof data === "string") {
-      dispatch(cryptAction(file, data, type));
+      if (type === "enc") {
+        setDecrypt(false);
+        dispatch(cryptAction(file, data, type));
+      } else {
+        if (pass) {
+          dispatch(cryptAction(file, data, type, pass));
+        }
+      }
     }
   };
 
@@ -60,6 +72,8 @@ const Home = () => {
         <DroppedFileDiv>
           <FaFile style={{ marginRight: "10px" }} />
           {file?.name || "File"}
+
+          <input type="text" onChange={(e) => setPass(e.target.value)} />
         </DroppedFileDiv>
       ),
     [file]
@@ -82,7 +96,7 @@ const Home = () => {
         <Button encrypt onClick={() => handleCrypt("enc")}>
           Encrypt
         </Button>
-        <Button>Decrypt</Button>
+        <Button onClick={() => handleCrypt("dec")}>Decrypt</Button>
       </ButtonWrapper>
       <DroppedFileDiv>
         <FaFile style={{ marginRight: "10px" }} />

@@ -5,7 +5,7 @@ import CryptoJS from "crypto-js";
 import { CRYPT_ERROR, CRYPT_LOADING, CRYPT_SUCCESS } from "./types";
 
 export const cryptAction =
-  (file: File | undefined, data: string, type: string) =>
+  (file: File | undefined, data: string, type: string, pass: string = "") =>
   async (dispatch: Dispatch<CryptDispachTypes>) => {
     dispatch({
       type: CRYPT_LOADING,
@@ -30,10 +30,29 @@ export const cryptAction =
             },
           });
         };
-        cryptWorker.onerror = (e) => {
-          throw Error;
-        };
+      } else {
+        const key = atob(pass);
+        console.log(key);
+        // cryptWorker.onmessage = (e) => {
+        const decrypted = CryptoJS.AES.decrypt(data, key).toString(
+          CryptoJS.enc.Latin1
+        );
+        const fileURL = decrypted;
+        const fileName = `${file!.name.replace(".enc", "")}`;
+        dispatch({
+          type: CRYPT_SUCCESS,
+          payload: {
+            fileURL,
+            fileName,
+            key: "",
+            type,
+          },
+        });
+        // };
       }
+      cryptWorker.onerror = (e) => {
+        throw Error;
+      };
     } catch (err) {
       dispatch({
         type: CRYPT_ERROR,
