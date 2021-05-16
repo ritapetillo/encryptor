@@ -5,7 +5,12 @@ import CryptoJS from "crypto-js";
 import { CRYPT_ERROR, CRYPT_LOADING, CRYPT_SUCCESS } from "./types";
 
 export const cryptAction =
-  (file: File | undefined, data: string, type: string, pass: string = "") =>
+  (
+    file: File | undefined,
+    data: string | ArrayBuffer | null | undefined,
+    type: string,
+    pass: string = ""
+  ) =>
   async (dispatch: Dispatch<CryptDispachTypes>) => {
     dispatch({
       type: CRYPT_LOADING,
@@ -13,10 +18,15 @@ export const cryptAction =
     });
     const cryptWorker = new Worker("./cryptoWorker.js");
     try {
+      console.log(type);
+      console.log(data);
+
+      if (typeof data !== "string") return null;
       if (type === "enc") {
         const randomKey = await crypto.randomKey(32);
+
         const key = btoa(randomKey);
-        cryptWorker.postMessage({ data, key, type });
+        cryptWorker.postMessage({ data, key: randomKey, type });
         cryptWorker.onmessage = (e) => {
           const fileURL = e.data;
           const fileName = `${file!.name}.enc`;
@@ -32,23 +42,20 @@ export const cryptAction =
         };
       } else {
         const key = atob(pass);
-        console.log(key);
-        // cryptWorker.onmessage = (e) => {
-        const decrypted = CryptoJS.AES.decrypt(data, key).toString(
-          CryptoJS.enc.Latin1
-        );
-        const fileURL = decrypted;
-        const fileName = `${file!.name.replace(".enc", "")}`;
-        dispatch({
-          type: CRYPT_SUCCESS,
-          payload: {
-            fileURL,
-            fileName,
-            key: "",
-            type,
-          },
-        });
-        // };
+        cryptWorker.postMessage({ data, key, type });
+        cryptWorker.onmessage = (e) => {
+          const fileURL = e.data;
+          const fileName = `${file!.name.replace(".enc", "")}`;
+          dispatch({
+            type: CRYPT_SUCCESS,
+            payload: {
+              fileURL,
+              fileName,
+              key: "",
+              type,
+            },
+          });
+        };
       }
       cryptWorker.onerror = (e) => {
         throw Error;

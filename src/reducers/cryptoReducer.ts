@@ -32,7 +32,7 @@ const cryptoReducer = (state = initialState, action: CryptDispachTypes) => {
       return {
         ...state,
         loading: false,
-        error: "There was a problem with the file",
+        error: payload.error,
       };
     default:
       return state;

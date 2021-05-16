@@ -15,43 +15,51 @@ import { FaFile } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { cryptAction } from "../../actions/encryptActions";
 import { RootStore } from "../../store";
+import { isPropertyAssignment } from "typescript";
+import { CRYPT_ERROR } from "../../actions/types";
 const Home = () => {
   const [file, setFile] = useState<File | undefined>();
   const [data, setData] = useState<string | ArrayBuffer | null>();
   const [pass, setPass] = useState<string | undefined>();
   const [decrypt, setDecrypt] = useState(false);
   const dispatch = useDispatch();
-  const { fileURL, fileName, key } = useSelector(
+  const { fileURL, fileName, key, error } = useSelector(
     (state: RootStore) => state.crypto
   );
 
   const onDrop = useCallback((file: File[]) => {
-    setFile(file[0]);
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      console.log(reader.result);
-      setData(reader.result);
-    };
-    reader.readAsText(file[0]);
+    if (file[0]) setFile(file[0]);
   }, []);
 
-  const handleCrypt = (type: string) => {
-    setDecrypt(true);
-    console.log(pass);
-
-    if (file && data && typeof data === "string") {
-      if (type === "enc") {
-        setDecrypt(false);
-        dispatch(cryptAction(file, data, type));
-      } else {
-        if (pass) {
-          dispatch(cryptAction(file, data, type, pass));
-        }
-      }
+  const handleCrypt = async (type: string) => {
+    const reader = new FileReader();
+    if (type === "dec") {
+      if (pass) {
+        reader.onload = async (fileRead) => {
+          console.log(fileRead);
+          if (!file) return null;
+          dispatch(cryptAction(file, reader.result, type, pass));
+        };
+        reader.readAsText(file!);
+      } else
+        dispatch({
+          type: CRYPT_ERROR,
+          payload: {
+            error: "You must insert the key",
+          },
+        });
+    } else {
+      reader.onload = async (fileRead) => {
+        console.log(fileRead);
+        if (!file) return null;
+        dispatch(cryptAction(file, reader.result, type, pass));
+      };
+      reader.readAsDataURL(file!);
     }
   };
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
+
   const uploadArea = useMemo(
     () =>
       !file ? (
@@ -74,9 +82,10 @@ const Home = () => {
           {file?.name || "File"}
 
           <input type="text" onChange={(e) => setPass(e.target.value)} />
+          <p>{error}</p>
         </DroppedFileDiv>
       ),
-    [file]
+    [file, error]
   );
 
   return (
