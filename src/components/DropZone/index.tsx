@@ -98,7 +98,7 @@ const DropZone = () => {
             onClick={handleReset}
           />
 
-          <p>{error}</p>
+          <p style={{ marginBottom: "20px" }}>{error}</p>
         </DroppedFileDiv>
       ),
     [file, error]
