@@ -80,7 +80,7 @@ const DropZone = () => {
           <ButtonInput>
             <div>
               <FaFile style={{ marginRight: "10px" }} />
-              {"Upload File"}
+              {"Choose file!"}
             </div>
             <div>
               <BsChevronDown />
