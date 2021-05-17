@@ -81,3 +81,10 @@ export const BorderedCenteredDiv = styled(Row)`
   align-items: center;
   height: 120px;
 `;
+
+export const Footer = styled.div`
+  text-align: center;
+  background-color: ${(props) => props.theme.primaryColor};
+  color: ${({ theme }) => theme.text};
+  padding: 20px 0;
+`;
