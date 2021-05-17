@@ -27,10 +27,11 @@ const Home = () => {
   return (
     <HomeContainer>
       <TextWrapper>
-        <h2>fdsfjsdpofjdpspsjg</h2>
+        <h2>Cubbit encryptor</h2>
         {!fileURL && (
           <p>
-            fdsfdsfdsfdsgfdsfdsfdsfdshjfgjghjtyighhrfth4564565dfedfbhvkdfbgskdfbgkdfghdfklhew4ulo;i;o';fgkk;dfllgkdf;heroh
+            Advanced online file encryption and decryption. Secure any file type
+            and maintain your privacy!
           </p>
         )}
       </TextWrapper>
