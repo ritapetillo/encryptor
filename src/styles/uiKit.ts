@@ -28,7 +28,7 @@ export const ButtonInput = styled.div`
   width: 264px;
   height: 48px;
   display: flex;
-  background-color: white;
+  background-color: ${(props) => props.theme.buttonUpload};
   border-radius: 3px;
   justify-self: center;
   margin-top: 50px;

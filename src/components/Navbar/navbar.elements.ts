@@ -8,6 +8,7 @@ export const NavbarContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
   img {
     height: 50px;
   }
@@ -30,6 +31,22 @@ export const NavbarButtonContainer = styled.div`
     justify-content: center;
   }
 `;
+
+export const ToggleContainer = styled(NavbarButtonContainer)`
+  font-size: 26px;
+  svg {
+    margin: 0 5px;
+    cursor: pointer;
+    color: ${(props) => props.theme.text};
+  }
+  @media (max-width: 450px) {
+    width: fit-content;
+    position: absolute;
+    top: -10px;
+    right: 10px;
+  }
+`;
+
 export interface IButtonNavbar {
   active?: boolean;
 }

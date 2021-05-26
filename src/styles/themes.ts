@@ -6,6 +6,7 @@ export const lightTheme = {
   textDarker: "rgb(137, 136, 135)",
   textSecondary: "rgb(12, 47, 69)",
   toggleBorder: "#FFF",
+  buttonUpload: "#292929",
   gradient: "linear-gradient(#39598A, #79D7ED)",
   fontPrimary: "Roboto",
 };
@@ -16,6 +17,7 @@ export const darkTheme = {
   secondaryColor: "#009eff",
   secondaryColorDarker: "#0065FF",
   text: "#fff",
+  buttonUpload: "#fff",
   textSecondary: "#e3dcd6",
   textDarker: "rgb(221, 221, 221)",
   toggleBorder: "#FFF",

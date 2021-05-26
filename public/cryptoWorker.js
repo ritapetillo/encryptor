@@ -4,10 +4,11 @@ importScripts(
 
 onmessage = (e) => {
   if (e.data.type === "enc") {
-    console.log(e.data.data);
     const encrypted = CryptoJS.AES.encrypt(e.data.data, e.data.key);
+    console.log(encrypted);
     const fileURL = "data:application/octet-stream," + encrypted;
     console.log(fileURL);
+
     postMessage(fileURL);
   } else {
     var decrypted = CryptoJS.AES.decrypt(e.data.data, e.data.key).toString(

@@ -4,12 +4,16 @@ import { ThemeProvider } from "styled-components";
 import "./App.css";
 import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
-import { darkTheme } from "./styles/themes";
+import { darkTheme, lightTheme } from "./styles/themes";
 import { Footer } from "./styles/uiKit";
+import { useSelector } from "react-redux";
+import { RootStore } from "./store";
+import { Theme } from "./interfaces/states";
 
 function App() {
+  const { theme } = useSelector((state: RootStore) => state.theme);
   return (
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={theme === Theme.dark ? darkTheme : lightTheme}>
       <div className="App">
         <Navbar />
         <Switch>
