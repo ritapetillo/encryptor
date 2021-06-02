@@ -35,7 +35,9 @@ const Navbar = () => {
     <NavbarContainer>
       <img src="./img/Logo.svg" alt="" />
       <NavbarButtonContainer>
-        <ButtonNavbar active>Encrypted</ButtonNavbar>
+        <ButtonNavbar active data-testid="navbar-text">
+          Encrypted
+        </ButtonNavbar>
         <ButtonNavbar>fdsfsdff</ButtonNavbar>
       </NavbarButtonContainer>
       {toggleTheme}
